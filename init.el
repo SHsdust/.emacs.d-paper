@@ -3,7 +3,7 @@
 
 ;; This file bootstraps the configuration, which is divided into
 ;; a number of other files.
-
+;; theme for eink: almost-mono-cream && danneskjold-light
 ;;; Code:
 
 ;; Produce backtraces when errors occur: can be helpful to diagnose startup issues
