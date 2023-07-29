@@ -73,7 +73,7 @@
 (require 'init-smex)
 (require 'init-ivy)
 (require 'init-hippie-expand)
-(require 'init-company)
+;; (require 'init-company)
 (require 'init-windows)
 (require 'init-sessions)
 (require 'init-mmm)
@@ -178,27 +178,37 @@
 ;;----------------------------------------------------------------------------
 (require 'init-locales)
 
-;;----------------------------------------------------------------------------
-;; Nox code completion
-;;----------------------------------------------------------------------------
-(require 'nox)
+;; ;;----------------------------------------------------------------------------
+;; ;; Nox code completion
+;; ;;----------------------------------------------------------------------------
+;; (require 'nox)
 
-(dolist (hook (list
-               ;; 'js-mode-hook
-               'rust-mode-hook
-               'python-mode-hook
-               ;; 'ruby-mode-hook
-               ;; 'java-mode-hook
-               'sh-mode-hook
-               ;; 'php-mode-hook
-               'c-mode-common-hook
-               'c-mode-hook
-               ;; 'csharp-mode-hook
-               'c++-mode-hook
-               'haskell-mode-hook
-               ))
-  (add-hook hook '(lambda () (nox-ensure))))
+;; (dolist (hook (list
+;;                ;; 'js-mode-hook
+;;                'rust-mode-hook
+;;                'python-mode-hook
+;;                ;; 'ruby-mode-hook
+;;                ;; 'java-mode-hook
+;;                'sh-mode-hook
+;;                ;; 'php-mode-hook
+;;                'c-mode-common-hook
+;;                'c-mode-hook
+;;                ;; 'csharp-mode-hook
+;;                'c++-mode-hook
+;;                'haskell-mode-hook
+;;                ))
+;;   (add-hook hook '(lambda () (nox-ensure))))
 
+;;----------------------------------------------------------------------------
+;; Allow users to provide an optional "init-local" containing personal settings
+;;----------------------------------------------------------------------------
+(add-to-list 'load-path "~/.emacs.d/plugins/lsp-bridge")
+
+(require 'yasnippet)
+(yas-global-mode 1)
+
+(require 'lsp-bridge)
+(global-lsp-bridge-mode)
 
 ;;----------------------------------------------------------------------------
 ;; Allow users to provide an optional "init-local" containing personal settings

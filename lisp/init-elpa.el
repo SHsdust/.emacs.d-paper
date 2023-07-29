@@ -15,6 +15,8 @@
 
 ;;; Standard package repositories
 
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.org/packages/") t)
 
 ;; set Chinese mirrors
 ;; (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
