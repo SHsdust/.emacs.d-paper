@@ -4,8 +4,8 @@
 
 (require-package 'color-theme-sanityinc-solarized)
 (require-package 'color-theme-sanityinc-tomorrow)
-
-
+(require-package 'almost-mono-cream-theme)
+(require-package 'danneskjold-light-theme)
 
 ;; Don't prompt to confirm theme safety. This avoids problems with
 ;; first-time startup on Emacs > 26.3.
