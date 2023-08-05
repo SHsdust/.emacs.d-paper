@@ -38,7 +38,7 @@
 (defvar docker-open-hook ()
   "Called when `docker' transient is opened.")
 
-(defvar docker-status-strings '(:containers "" :images "" :networks "" :volumes "")
+(defvar docker-status-strings '(:containers "" :images "" :networks "" :volumes "" :contexts "")
   "Plist of statuses for `docker' transient.")
 
 (defcustom docker-show-status t
@@ -55,7 +55,7 @@
   (apply #'docker-run-async-with-buffer docker-command (docker-arguments) args))
 
 (defun docker-get-transient-action ()
-  "Extract the action out of `current-transient-command'."
+  "Extract the action out of `transient-current-command'."
   (s-replace "-" " " (s-chop-prefix "docker-" (symbol-name transient-current-command))))
 
 (defun docker-generic-action-description ()
@@ -88,16 +88,18 @@
   (--each (docker-utils-get-marked-items-ids)
     (docker-run-docker-async-with-buffer (s-split " " action) args it)))
 
-(aio-defun docker-inspect ()
+(aio-defun docker-inspect (&optional subcmd)
   "Run \"`docker-command' inspect\" on the selected items."
   (interactive)
   (docker-utils-ensure-items)
   (--each (docker-utils-get-marked-items-ids)
     (let* ((id it)
-           (data (aio-await (docker-run-docker-async "inspect" id))))
+           (data (aio-await (docker-run-docker-async (concat (or subcmd "") " inspect") id))))
       (docker-utils-with-buffer (format "inspect %s" id)
         (insert data)
-        (js-mode)
+        (if (fboundp 'json-mode)
+            (json-mode)
+          (js-mode))
         (view-mode)))))
 
 (defun docker-read-log-level (prompt &rest _args)
@@ -126,7 +128,8 @@
    ("c" (lambda ()(plist-get docker-status-strings :containers)) docker-containers)
    ("i" (lambda ()(plist-get docker-status-strings :images))     docker-images)
    ("n" (lambda ()(plist-get docker-status-strings :networks))   docker-networks)
-   ("v" (lambda ()(plist-get docker-status-strings :volumes))    docker-volumes)]
+   ("v" (lambda ()(plist-get docker-status-strings :volumes))    docker-volumes)
+   ("x" (lambda ()(plist-get docker-status-strings :contexts))   docker-contexts)]
   ["Other"
    ("C" "Compose" docker-compose)]
   (interactive)

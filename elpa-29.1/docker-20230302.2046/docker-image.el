@@ -90,7 +90,7 @@ displayed values in the column."
 
 Note this can be overriden for specific images using
 `docker-image-run-custom-args'."
-  :group 'docker-run
+  :group 'docker-image
   :type '(repeat string))
 
 (make-obsolete-variable 'docker-run-default-args 'docker-image-run-default-args "Docker 2.1.0")
@@ -165,12 +165,12 @@ The result is the tabulated list id for an entry is propertized with
 
 (aio-defun docker-image-refresh ()
   "Refresh the images list."
-  (setq tabulated-list-entries (aio-await (docker-image-entries-propertized (docker-image-ls-arguments))))
-  (tabulated-list-print t))
+  (docker-utils-refresh-entries
+   (docker-image-entries-propertized (docker-image-ls-arguments))))
 
 (defun docker-image-read-name ()
   "Read an image name."
-  (completing-read "Image: " (-map #'car (docker-image-entries))))
+  (completing-read "Image: " (-map #'car (aio-wait-for (docker-image-entries)))))
 
 ;;;###autoload (autoload 'docker-image-pull-one "docker-image" nil t)
 (aio-defun docker-image-pull-one (name &optional all)

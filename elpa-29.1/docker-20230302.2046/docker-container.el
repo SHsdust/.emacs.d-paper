@@ -150,12 +150,12 @@ string that transforms the displayed values in the column."
 
 (aio-defun docker-container-refresh ()
   "Refresh the containers list."
-  (setq tabulated-list-entries (aio-await (docker-container-entries-propertized (docker-container-ls-arguments))))
-  (tabulated-list-print t))
+  (docker-utils-refresh-entries
+   (docker-container-entries-propertized (docker-container-ls-arguments))))
 
 (defun docker-container-read-name ()
   "Read an container name."
-  (completing-read "Container: " (-map #'car (docker-container-entries))))
+  (completing-read "Container: " (-map #'car (aio-wait-for (docker-container-entries)))))
 
 (defvar eshell-buffer-name)
 
@@ -235,7 +235,6 @@ nil, ask the user for it."
 (defun docker-container-vterm (container)
   "Open `vterm' in CONTAINER."
   (interactive (list (docker-container-read-name)))
-  (require 'vterm nil 'noerror)
   (if (fboundp 'vterm-other-window)
       (let* ((container-address (format "docker:%s:/" container))
              (file-prefix (let ((prefix (file-remote-p default-directory)))

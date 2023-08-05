@@ -29,7 +29,7 @@
 (require 'docker-core)
 
 (defgroup docker-faces nil
-  "Docker faces."
+  "Docker faces customization group."
   :group 'docker
   :group 'faces)
 
@@ -40,7 +40,7 @@
 
 (defface docker-face-status-down
   '((t :inherit error))
-  "Face used when the status is down"
+  "Face used when the status is down."
   :group 'docker-faces)
 
 (defface docker-face-status-other
@@ -51,6 +51,11 @@
 (defface docker-face-dangling
   '((t :inherit shadow))
   "Face for dangling items."
+  :group 'docker-faces)
+
+(defface docker-face-active
+  '((t :inherit bold))
+  "Face for active items."
   :group 'docker-faces)
 
 (provide 'docker-faces)
