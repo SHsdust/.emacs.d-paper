@@ -48,4 +48,34 @@
 (global-set-key (kbd "M-.") 'lsp-bridge-find-def)
 (global-set-key (kbd "M-;") 'lsp-bridge-find-def-return)
 
+;; copy only visible region while in fold state
+(defun copy-visible-region-with-dots-and-brace ()
+  "Copy the visible lines in the selected region to the clipboard, appending '...' and '}' for folded lines."
+  (interactive)
+  (if (not (region-active-p))
+      (message "No active region!")
+    (let ((visible-text "")
+          (start (region-beginning))
+          (end (region-end))
+          line-start line-end)
+      (save-excursion
+        (goto-char start)
+        (while (< (point) end)
+          (setq line-start (line-beginning-position))
+          (setq line-end (line-end-position))
+          (unless (invisible-p (point))
+            (setq visible-text
+                  (concat visible-text
+                          (buffer-substring-no-properties line-start line-end)
+                          ;; Check if the end of the line is invisible, indicating a fold.
+                          (if (invisible-p line-end) "...}" "")
+                          "\n")))
+          (forward-line 1)))
+      (with-temp-buffer
+        (insert visible-text)
+        (clipboard-kill-ring-save (point-min) (point-max))))))
+
+;; enable hs-minor-mode in all buffers
+(add-hook 'prog-mode-hook 'hs-minor-mode)
+
 (provide 'init-local)
